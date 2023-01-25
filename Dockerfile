@@ -1,13 +1,17 @@
-FROM node:alpine3.10
+FROM node:10-alpine
 
-ADD package.json /opt/app-root/src/package.json
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
-WORKDIR /opt/app-root/src
+WORKDIR /home/node/app
+
+COPY package*.json ./
+
+USER node
 
 RUN npm install
 
-ADD . /opt/app-root/src
+COPY --chown=node:node . .
 
 EXPOSE 8080
 
-CMD ["node", "app.js"]
+CMD [ "node", "app.js" ]
